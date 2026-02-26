@@ -53,7 +53,7 @@ namespace GrpcClient
         {
             if (loggedIn)
             {
-                login_label.Content = "Already logged in";
+                status_label.Content = "Already logged in";
                 return;
             }
 
@@ -68,15 +68,15 @@ namespace GrpcClient
             {
                 temp = client.Login(user);
             }
-            catch (RpcException ex)
+            catch
             {
-                login_label.Content = $"Login error: {ex.Status.Detail}";
+                status_label.Content ="Login failed, unknown error :/";
                 return;
             }
 
             if (string.IsNullOrEmpty(temp.Id))
             {
-                login_label.Content = "Login failed";
+                status_label.Content = "Login failed, incorrect username or password";
                 sessionId = null;
                 return;
             }
@@ -97,12 +97,10 @@ namespace GrpcClient
                 return;
             }
 
-            var id = new SessionId { Id = sessionId };
-            var headers = GetAuthHeaders();
-
-            var result = client.Logout(id, headers);
-            login_label.Content = result.Success;
+            sessionId = "";
+            jwttoken = "";
             loggedIn = false;
+            login_label.Content = "Logged out!";
             BlockVisible(false);
         }
 
@@ -126,7 +124,7 @@ namespace GrpcClient
             }
             catch
             {
-                status_label.Content = "Except, it doesn't work :c";
+                status_label.Content = "Can't create :c";
             }
         }
 
@@ -162,7 +160,7 @@ namespace GrpcClient
             }
             catch
             {
-                status_label.Content = "Except, it doesn't work :c";
+                status_label.Content = "Can't update :c";
             }
         }
 
@@ -186,7 +184,7 @@ namespace GrpcClient
             }
             catch
             {
-                status_label.Content = "Except, it doesn't work :c";
+                status_label.Content = "Can't delete :c";
             }
         }
 
@@ -197,7 +195,7 @@ namespace GrpcClient
 
             var result = client.BudaPestCount(new Empty());
 
-            listBox1.Items.Add("Number of junkyards:");
+            status_label.Content = "Number of junkyards in Buda and Pest each";
             listBox1.Items.Add($"Buda: {result.BudaCount}");
             listBox1.Items.Add($"Pest: {result.PestCount}");
         }
@@ -208,7 +206,7 @@ namespace GrpcClient
             listBox1.Items.Clear();
 
             var yard = client.SeveralYards(new Empty());
-            listBox1.Items.Add("Several junkyards:");
+            status_label.Content="Districts where are several junkyards:";
 
             foreach (var i in yard.Yards)
             {
@@ -231,8 +229,9 @@ namespace GrpcClient
                 var yard = client.WasteType(req);
                 foreach (var i in yard.Yards)
                 {
-                    listBox1.Items.Add($"{i.District}");
+                    listBox1.Items.Add($"{i.Waste}");
                 }
+                status_label.Content = "Names of waste types that can be turned in in fewer than "+(query3_txt.Text)+" junkyards";
             }
             catch
             {

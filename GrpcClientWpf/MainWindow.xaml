@@ -1,50 +1,83 @@
 ﻿<Window x:Class="GrpcClient.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Junkyard Client" Height="450" Width="800">
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="Junkyard" Height="450" Width="600" Background="aliceblue">
+    <Window.Resources>
+
+        <Style x:Key="SimplePlaceholderTextBox" TargetType="TextBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+
+                            <!-- Placeholder text -->
+                            <TextBlock x:Name="Placeholder"
+                                   Text="{TemplateBinding Tag}"
+                                   Foreground="#55FFFFFF"
+                                   Margin="4,2"
+                                   IsHitTestVisible="False"
+                                   Visibility="Collapsed"/>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <!-- Show placeholder only when empty -->
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Placeholder" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Login area -->
-        <Label x:Name="login_label" Grid.Row="0" Grid.Column="0" Content="Not logged in" Margin="0,0,0,10"/>
-        <TextBox x:Name="username_txt" Grid.Row="1" Grid.Column="0" Width="100" Text="username" Margin="0,0,0,5"/>
-        <TextBox x:Name="password_txt" Grid.Row="2" Grid.Column="0" Width="100" Text="password" Margin="0,0,0,5"/>
-        <StackPanel Grid.Row="3" Grid.Column="0" Orientation="Horizontal" Margin="0,5,0,5">
-            <Button x:Name="login_button" Content="Login" Width="60" Margin="0,0,5,0" Click="login_button_Click"/>
-            <Button x:Name="logout_button" Content="Logout" Width="60" Click="logout_button_Click"/>
+        <!--LOGIN-->
+        <Label x:Name="login_label" Grid.Row="0" Grid.Column="0" Content="Not logged in" Margin="15,0,10,159" Grid.RowSpan="1"/>
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" Margin="10,10,10,10">
+            <xctk:WatermarkTextBox x:Name="username_txt" Width="100" Height="20" Watermark="username" Margin="20,50,20,10" Padding="1"/>
+            <xctk:WatermarkTextBox x:Name="password_txt" Width="100" Height="20" Watermark="password" Margin="20,0,20,10" Padding="1"/>
+            <Button x:Name="login_button" Content="Login" Width="65" Click="login_button_Click" Height="20" Margin="5" Background="LightBlue"/>
+            <Button x:Name="logout_button" Content="Logout" Width="65" Click="logout_button_Click" Height="20" Background="LightBlue"/>
         </StackPanel>
 
-        <!-- CRUD + queries buttons -->
-        <StackPanel Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Orientation="Vertical" Margin="10,0,0,0">
-            <Button x:Name="read_button" Content="read" Width="75" Margin="0,0,0,5" Click="read_button_Click"/>
-            <Button x:Name="query1_button" Content="query 1" Width="75" Margin="0,0,0,5" Click="query1_button_Click"/>
-            <Button x:Name="query2_button" Content="query 2" Width="75" Margin="0,0,0,5" Click="query2_button_Click"/>
-            <Button x:Name="query3_button" Content="query 3" Width="75" Margin="0,0,0,5" Click="query3_button_Click"/>
+        <!--CRUD-->
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="65,10,215,-23">
+            <Button x:Name="read_button" Content="read" Width="75" Margin="0,10,0,5" Click="read_button_Click" Background="LightBlue"/>
+            <Button x:Name="create_button" Content="create" Width="75" Height="20" Margin="0,0,0,5" Click="create_button_Click" Background="LightBlue"/>
+            <Button x:Name="update_button" Content="update" Width="75" Height="20" Margin="0,0,0,5" Click="update_Click" Background="LightBlue"/>
+            <Button x:Name="delete_button" Content="delete" Width="75" Height="20" Margin="0,0,0,5" Click="delete_button_Click" Background="LightBlue"/>
+            <Button x:Name="query1_button" Content="query 1" Width="75" Height="20" Margin="0,0,0,5" Click="query1_button_Click" Background="LightBlue"/>
+            <Button x:Name="query2_button" Content="query 2" Width="75" Height="20" Margin="0,0,0,5" Click="query2_button_Click" Background="LightBlue"/>
+            <Button x:Name="query3_button" Content="query 3" Width="75" Height="20" Margin="0,0,0,10" Click="query3_button_Click" Background="LightBlue"/>
         </StackPanel>
 
-        <!-- ListBox + query3 input -->
-        <StackPanel Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Orientation="Vertical">
-            <ListBox x:Name="listBox1" Height="120" Margin="0,0,0,5"/>
-            <TextBox x:Name="query3_txt" Width="100" Text="number"/>
-        </StackPanel>
+        <!--LIST-->
+        <ListBox x:Name="listBox1" Grid.Column="1" Margin="10,0,10,0" Height="180" VerticalAlignment="Center" FontSize="20"/>
 
-        <!-- CRUD input fields -->
-        <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Vertical" Margin="0,10,0,0">
-            <TextBox x:Name="id_txt" Width="100" Text="id" Margin="0,0,0,5"/>
-            <TextBox x:Name="district_txt" Width="100" Text="district" Margin="0,0,0,5"/>
-            <TextBox x:Name="address_txt" Width="100" Text="address" Margin="0,0,0,5"/>
-            <ComboBox x:Name="waste_box" Width="100" Margin="0,0,0,5" Text="waste">
+        <!--STATUS-->
+        <Label x:Name="status_label" Grid.Row="1" Grid.Column="0"  Margin="10,10,10,-29"/>
+
+
+        <!--INPUT-->
+        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Vertical" Margin="190,10,60,21">
+            <xctk:WatermarkTextBox Watermark="number" Padding="1" x:Name="query3_txt" Grid.Column="1" Width="110" Height="20" Margin="0,10,0,5" Grid.Row="4" Background="White" />
+            <xctk:WatermarkTextBox Watermark="id" Padding="1" x:Name="id_txt" Grid.Column="1" Width="110" Height="20" Margin="0,0,0,5" Grid.Row="4"/>
+            <xctk:WatermarkTextBox Watermark="district" Padding="1" x:Name="district_txt" Grid.Column="1" Width="110" Height="20" Margin="0,0,0,5" Grid.Row="4"/>
+            <xctk:WatermarkTextBox Watermark="address" Padding="1" x:Name="address_txt" Grid.Column="1" Width="110" Height="20" Margin="0,0,0,5" Grid.Row="4"/>
+            <ComboBox Text="waste" Padding="1"  x:Name="waste_box" Grid.Column="1" Width="110" Height="20" Margin="0,0,0,5" Grid.Row="4" Background="White">
                 <ComboBoxItem Content="biodegradable"/>
                 <ComboBoxItem Content="electrical"/>
                 <ComboBoxItem Content="wood"/>
@@ -52,14 +85,6 @@
                 <ComboBoxItem Content="plastic"/>
                 <ComboBoxItem Content="glass"/>
             </ComboBox>
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                <Button x:Name="create_button" Content="create" Width="60" Margin="0,0,5,0" Click="create_button_Click"/>
-                <Button x:Name="update_button" Content="update" Width="60" Margin="0,0,5,0" Click="update_Click"/>
-                <Button x:Name="delete_button" Content="delete" Width="60" Click="delete_button_Click"/>
-            </StackPanel>
         </StackPanel>
-
-        <!-- Status label -->
-        <Label x:Name="status_label" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3" Margin="0,10,0,0"/>
     </Grid>
 </Window>
