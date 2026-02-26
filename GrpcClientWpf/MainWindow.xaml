@@ -68,7 +68,7 @@
         <ListBox x:Name="listBox1" Grid.Column="1" Margin="10,0,10,0" Height="180" VerticalAlignment="Center" FontSize="20"/>
 
         <!--STATUS-->
-        <Label x:Name="status_label" Grid.Row="1" Grid.Column="0"  Margin="10,10,10,-29"/>
+        <TextBlock x:Name="status_label" Grid.Row="1" Grid.Column="0"  Margin="20,10,20,-23" TextWrapping="Wrap"/>
 
 
         <!--INPUT-->

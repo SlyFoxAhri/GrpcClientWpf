@@ -60,7 +60,7 @@ namespace GrpcClient
         {
             if (loggedIn)
             {
-                status_label.Content = "Already logged in";
+                status_label.Text = "Already logged in";
                 return;
             }
 
@@ -77,13 +77,13 @@ namespace GrpcClient
             }
             catch
             {
-                status_label.Content ="Login failed :/";
+                status_label.Text = "Login failed :/";
                 return;
             }
 
             if (string.IsNullOrEmpty(temp.Id))
             {
-                status_label.Content = "Login failed, incorrect username or password";
+                status_label.Text = "Login failed, incorrect username or password";
                 sessionId = null;
                 return;
             }
@@ -91,7 +91,7 @@ namespace GrpcClient
             sessionId = temp.Id;
             jwttoken = temp.Jwtoken;
             login_label.Content = "Logged in :3";
-            status_label.Content = "";
+            status_label.Text = "";
             loggedIn = true;
             BlockVisible(true);
         }
@@ -128,11 +128,11 @@ namespace GrpcClient
 
                 var headers = GetAuthHeaders();
                 var result = client.Create(req, headers);
-                status_label.Content = result.Success;
+                status_label.Text = result.Success;
             }
             catch
             {
-                status_label.Content = "Can't create :c";
+                status_label.Text = "Can't create :c";
             }
         }
 
@@ -142,6 +142,7 @@ namespace GrpcClient
             listBox1.Items.Clear();
             var yard = client.Read(new Empty());
 
+            listBox1.Items.Add("Id | District | Address");
             foreach (var i in yard.Yards)
             {
                 listBox1.Items.Add($"{i.Id} | {i.District} | {i.Address}");
@@ -164,11 +165,11 @@ namespace GrpcClient
 
                 var headers = GetAuthHeaders();
                 var result = client.Update(req, headers);
-                status_label.Content = result.Success;
+                status_label.Text = result.Success;
             }
             catch
             {
-                status_label.Content = "Can't update :c";
+                status_label.Text = "Can't update :c";
             }
         }
 
@@ -188,11 +189,11 @@ namespace GrpcClient
 
                 var headers = GetAuthHeaders();
                 var result = client.Delete(req, headers);
-                status_label.Content = result.Success;
+                status_label.Text = result.Success;
             }
             catch
             {
-                status_label.Content = "Can't delete :c";
+                status_label.Text = "Can't delete :c";
             }
         }
 
@@ -203,7 +204,7 @@ namespace GrpcClient
 
             var result = client.BudaPestCount(new Empty());
 
-            status_label.Content = "Number of junkyards in Buda and Pest each";
+            status_label.Text = "Number of junkyards in Buda and Pest each:";
             listBox1.Items.Add($"Buda: {result.BudaCount}");
             listBox1.Items.Add($"Pest: {result.PestCount}");
         }
@@ -214,7 +215,7 @@ namespace GrpcClient
             listBox1.Items.Clear();
 
             var yard = client.SeveralYards(new Empty());
-            status_label.Content="Districts where are several junkyards:";
+            status_label.Text ="Districts where are several junkyards:";
 
             foreach (var i in yard.Yards)
             {
@@ -239,11 +240,11 @@ namespace GrpcClient
                 {
                     listBox1.Items.Add($"{i.Waste}");
                 }
-                status_label.Content = "Names of waste types that can be turned in in fewer than "+(query3_txt.Text)+" junkyards";
+                status_label.Text = "Names of waste types that can be turned in in fewer than "+(query3_txt.Text)+" junkyards:";
             }
             catch
             {
-                status_label.Content = "Input number! :c";
+                status_label.Text = "Input number! :c";
             }
         }
     }
