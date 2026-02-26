@@ -2,6 +2,7 @@
 using Grpc.Net.Client;
 using GrpcClient; // your generated gRPC namespace
 using System;
+using System.Net.Http;
 using System.Windows;
 
 namespace GrpcClient
@@ -21,7 +22,13 @@ namespace GrpcClient
         {
             InitializeComponent();
 
-            channel = GrpcChannel.ForAddress(Address);
+            channel = GrpcChannel.ForAddress(Address, new GrpcChannelOptions
+            {
+                HttpHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                }
+            });
             client = new Service.ServiceClient(channel);
 
             BlockVisible(false);
@@ -70,7 +77,7 @@ namespace GrpcClient
             }
             catch
             {
-                status_label.Content ="Login failed, unknown error :/";
+                status_label.Content ="Login failed :/";
                 return;
             }
 
@@ -84,6 +91,7 @@ namespace GrpcClient
             sessionId = temp.Id;
             jwttoken = temp.Jwtoken;
             login_label.Content = "Logged in :3";
+            status_label.Content = "";
             loggedIn = true;
             BlockVisible(true);
         }
